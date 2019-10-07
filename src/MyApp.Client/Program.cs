@@ -17,9 +17,10 @@ namespace MyApp.Client
 
             while (true)
             {
+                Console.WriteLine("Message : ");
                 var request = Console.ReadLine();
                 var response = await client.SendAsync(request);
-                Console.WriteLine(response);
+                Console.WriteLine(response.Trim());
             }
 
                 

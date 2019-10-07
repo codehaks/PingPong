@@ -15,32 +15,14 @@ namespace MyApp.Client
             var client = new Vega.Client("127.100.100.50", 3000);
             await client.Connect();
 
-            var response = await client.SendAsync("Ping");
-            Console.WriteLine(response);
+            while (true)
+            {
+                var request = Console.ReadLine();
+                var response = await client.SendAsync(request);
+                Console.WriteLine(response);
+            }
 
-
-            //var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            //var address = IPAddress.Parse("127.100.100.50");
-            //var port = 3000;
-
-            //var endpoint = new IPEndPoint(address, port);
-
-            //Console.WriteLine("Connecting...");
-            //await socket.ConnectAsync(endpoint);
-            //if (socket.Connected)
-            //{
-            //    ASCIIEncoding encoder = new ASCIIEncoding();
-            //    byte[] messageBytes = encoder.GetBytes("Ping");
-
-            //    await socket.SendAsync(messageBytes,SocketFlags.None);
-            //    Console.WriteLine("\n Ping sent. ");
-            //    var response= new ArraySegment<byte>(new byte[512], 0, 512);
-
-            //    await socket.ReceiveAsync(response, SocketFlags.None);
-
-            //    Console.WriteLine(encoder.GetString(response));
-            //}
-
+                
 
         }
     }

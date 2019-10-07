@@ -12,7 +12,9 @@ namespace MyApp.Server
         {
          
 
+            // dispose
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
             var address = IPAddress.Parse("127.100.100.50");
             var port = 3000;
 

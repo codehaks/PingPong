@@ -1,45 +1,40 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MyApp.Client
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            try
+
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            var address = IPAddress.Parse("127.100.100.50");
+            var port = 3000;
+
+            var endpoint = new IPEndPoint(address, port);
+
+            Console.WriteLine("Connecting...");
+            await socket.ConnectAsync(endpoint);
+            if (socket.Connected)
             {
-                TcpClient Tcpclient = new TcpClient();
+                ASCIIEncoding encoder = new ASCIIEncoding();
+                byte[] messageBytes = encoder.GetBytes("Ping");
 
-                Console.WriteLine("Connecting..");
-                Tcpclient.Connect("127.100.100.50", 3000);
-                Console.WriteLine("Connected");
-                Console.WriteLine("Ente the String you want to send ");
+                await socket.SendAsync(messageBytes,SocketFlags.None);
+                Console.WriteLine("\n Ping sent. ");
+                var response= new ArraySegment<byte>(new byte[512], 0, 512);
 
-                string str = Console.ReadLine();
-                Stream stm = Tcpclient.GetStream();
+                await socket.ReceiveAsync(response, SocketFlags.None);
 
-                ASCIIEncoding ascnd = new ASCIIEncoding();
-                byte[] ba = ascnd.GetBytes(str);
-                //Console.WriteLine("Sending..");
-                stm.Write(ba, 0, ba.Length);
-
-                //byte[] bb = new byte[100];
-                //int k = stm.Read(bb, 0, 100);
-                //for (int i = 0; i < k; i++)
-                //{
-                //    Console.Write(Convert.ToChar(bb[i]));
-                //}
-
-                Tcpclient.Close();
-                Console.ReadLine();
+                Console.WriteLine(encoder.GetString(response));
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error" + ex.StackTrace);
-            }
+
+            
         }
     }
 }

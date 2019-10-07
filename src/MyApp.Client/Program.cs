@@ -25,12 +25,13 @@ namespace MyApp.Client
                 byte[] ba = ascnd.GetBytes(str);
                 //Console.WriteLine("Sending..");
                 stm.Write(ba, 0, ba.Length);
-                byte[] bb = new byte[100];
-                int k = stm.Read(bb, 0, 100);
-                for (int i = 0; i < k; i++)
-                {
-                    Console.Write(Convert.ToChar(bb[i]));
-                }
+
+                //byte[] bb = new byte[100];
+                //int k = stm.Read(bb, 0, 100);
+                //for (int i = 0; i < k; i++)
+                //{
+                //    Console.Write(Convert.ToChar(bb[i]));
+                //}
 
                 Tcpclient.Close();
                 Console.ReadLine();

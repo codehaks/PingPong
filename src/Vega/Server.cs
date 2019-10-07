@@ -27,16 +27,20 @@ namespace Vega
             var address = IPAddress.Parse(_ip);
             var endpoint = new IPEndPoint(address, _port);
 
-            await Task.Run(async () =>
+
+            listner.Bind(endpoint);
+            listner.Listen(10);
+
+
+
+            while (true)
             {
-                listner.Bind(endpoint);
-                listner.Listen(10);
+                Console.WriteLine("Waiting connection ... ");
 
-                while (true)
+                handler = await listner.AcceptAsync();
+
+                await Task.Run(async () =>
                 {
-                    Console.WriteLine("Waiting connection ... ");
-
-                    handler = listner.Accept();
 
                     byte[] requestBytes = new Byte[1024];
                     string requestMessage = null;
@@ -56,9 +60,9 @@ namespace Vega
                     await handler.SendAsync(message, SocketFlags.None);
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
+                });
+            }
 
-                }
-            });
 
 
         }

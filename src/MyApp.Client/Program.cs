@@ -15,15 +15,12 @@ namespace MyApp.Client
             var client = new Vega.Client("127.100.100.50", 3000);
             await client.Connect();
 
-            while (true)
+
+            for (int i = 0; i < 5; i++)
             {
-                Console.WriteLine("Message : ");
-                var request = Console.ReadLine();
-                var response = await client.SendAsync(request);
+                var response = await client.SendAsync($"Ping({i})");
                 Console.WriteLine(response.Trim());
             }
-
-                
 
         }
     }

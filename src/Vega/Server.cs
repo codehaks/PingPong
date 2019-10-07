@@ -27,35 +27,40 @@ namespace Vega
             var address = IPAddress.Parse(_ip);
             var endpoint = new IPEndPoint(address, _port);
 
-            listner.Bind(endpoint);
-            listner.Listen(10);
-
-            while (true)
+            await Task.Run(async () =>
             {
-                Console.WriteLine("Waiting connection ... ");
-
-                handler = listner.Accept();
-
-                byte[] requestBytes = new Byte[1024];
-                string requestMessage = null;
+                listner.Bind(endpoint);
+                listner.Listen(10);
 
                 while (true)
                 {
-                    
-                    int requestLength = handler.Receive(requestBytes);
+                    Console.WriteLine("Waiting connection ... ");
 
-                    requestMessage += Encoding.ASCII.GetString(requestBytes, 0, requestLength);
-                    Console.WriteLine($"\n {requestMessage} received. ");
+                    handler = listner.Accept();
 
-                    break; // assuming message size is less than 1KB
+                    byte[] requestBytes = new Byte[1024];
+                    string requestMessage = null;
+
+                    while (true)
+                    {
+
+                        int requestLength = handler.Receive(requestBytes);
+
+                        requestMessage += Encoding.ASCII.GetString(requestBytes, 0, requestLength);
+                        Console.WriteLine($"\n {requestMessage} received. ");
+
+                        break; // assuming message size is less than 1KB
+                    }
+
+                    byte[] message = Encoding.ASCII.GetBytes("Pong");
+                    await handler.SendAsync(message, SocketFlags.None);
+                    handler.Shutdown(SocketShutdown.Both);
+                    handler.Close();
+
                 }
+            });
 
-                byte[] message = Encoding.ASCII.GetBytes("Pong");
-                await handler.SendAsync(message, SocketFlags.None);
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
 
-            }
         }
 
         public void Shutdown()

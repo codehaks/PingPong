@@ -12,8 +12,8 @@ namespace Vega
         private readonly string _ip;
         private readonly int _port;
 
-        private Socket socket;
-        private Socket serverSocket;
+        private Socket listner;
+        private Socket handler;
 
         public Server(string ip, int port)
         {
@@ -23,18 +23,18 @@ namespace Vega
 
         public async Task Start()
         {
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            listner = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             var address = IPAddress.Parse(_ip);
             var endpoint = new IPEndPoint(address, _port);
 
-            socket.Bind(endpoint);
-            socket.Listen(10);
+            listner.Bind(endpoint);
+            listner.Listen(10);
 
             while (true)
             {
                 Console.WriteLine("Waiting connection ... ");
 
-                serverSocket = socket.Accept();
+                handler = listner.Accept();
 
                 byte[] requestBytes = new Byte[1024];
                 string requestMessage = null;
@@ -42,7 +42,7 @@ namespace Vega
                 while (true)
                 {
                     
-                    int requestLength = serverSocket.Receive(requestBytes);
+                    int requestLength = handler.Receive(requestBytes);
 
                     requestMessage += Encoding.ASCII.GetString(requestBytes, 0, requestLength);
                     Console.WriteLine($"\n {requestMessage} received. ");
@@ -51,15 +51,17 @@ namespace Vega
                 }
 
                 byte[] message = Encoding.ASCII.GetBytes("Pong");
-                await serverSocket.SendAsync(message, SocketFlags.None);
+                await handler.SendAsync(message, SocketFlags.None);
+                handler.Shutdown(SocketShutdown.Both);
+                handler.Close();
 
             }
         }
 
         public void Shutdown()
         {
-            serverSocket.Shutdown(SocketShutdown.Both);
-            serverSocket.Close();
+            listner.Shutdown(SocketShutdown.Both);
+            listner.Close();
         }
     }
 }

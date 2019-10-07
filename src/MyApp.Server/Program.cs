@@ -56,7 +56,7 @@ namespace MyApp.Server
                 Console.WriteLine("Waiting connection ... ");
 
                 Socket serverSocket = socket.Accept();
-                // Data buffer 
+
                 byte[] bytes = new Byte[1024];
                 string data = null;
 
@@ -65,46 +65,22 @@ namespace MyApp.Server
                     Console.WriteLine("\n Ping received. ");
                     int numByte = serverSocket.Receive(bytes);
 
-                    data += Encoding.ASCII.GetString(bytes,
-                                               0, numByte);
+                    data += Encoding.ASCII.GetString(bytes, 0, numByte);
 
-                    //if (data.IndexOf("<EOF>") > -1)
-                        break;
+                    break; // assuming message size is less than 1KB
                 }
 
-                Console.WriteLine("Text received -> {0} ", data);
+                Console.WriteLine("Request -> {0} ", data);
                 byte[] message = Encoding.ASCII.GetBytes("Pong");
+                await serverSocket.SendAsync(message, SocketFlags.None);
+                Console.WriteLine("Response-> {0} ", message);
 
-                // Send a message to Client  
-                // using Send() method 
-                serverSocket.Send(message);
-
-                // Close client Socket using the 
-                // Close() method. After closing, 
-                // we can use the closed Socket  
-                // for a new Client Connection 
                 serverSocket.Shutdown(SocketShutdown.Both);
                 serverSocket.Close();
                 break;
             }
 
-            ////await socket.ConnectAsync(endpoint);
-            //if (socket.Connected)
-            //{
-            //    ASCIIEncoding encoder = new ASCIIEncoding();
 
-            //    var response = new ArraySegment<byte>(new byte[512], 0, 512);
-            //    await socket.ReceiveAsync(response, SocketFlags.None);
-
-                
-            //    byte[] messageBytes = encoder.GetBytes("Pong");
-
-            //    await socket.SendAsync(messageBytes, SocketFlags.None);
-
-            //    Console.WriteLine(encoder.GetString(response));
-            //}
-
-            //Console.ReadLine();
         }
     }
 }

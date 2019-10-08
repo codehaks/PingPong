@@ -13,7 +13,7 @@ namespace Vega
         private readonly int _port;
 
         private Socket listner;
-        private Socket handler;
+        //private Socket handler;
 
         public Server(string ip, int port)
         {
@@ -24,7 +24,7 @@ namespace Vega
         public async Task Start()
         {
             listner = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            var address = IPAddress.Parse(_ip);
+            var address = IPAddress.Any;//.Parse(_ip);
             var endpoint = new IPEndPoint(address, _port);
 
 
@@ -37,34 +37,40 @@ namespace Vega
             {
                 Console.WriteLine("Waiting connection ... ");
 
-                handler = await listner.AcceptAsync();
+                var handlerTask =  listner.AcceptAsync();
 
-                await Task.Run(async () =>
-                {
+                Console.WriteLine("Connecting ... ");
 
-                    byte[] requestBytes = new Byte[1024];
-                    string requestMessage = null;
+                Task.Run(() => HandleConnection(handlerTask));
 
-                    while (true)
-                    {
-
-                        int requestLength = handler.Receive(requestBytes);
-
-                        requestMessage += Encoding.ASCII.GetString(requestBytes, 0, requestLength);
-                        Console.WriteLine($"\n {requestMessage} received. ");
-
-                        break; // assuming message size is less than 1KB
-                    }
-
-                    byte[] message = Encoding.ASCII.GetBytes("Pong");
-                    await handler.SendAsync(message, SocketFlags.None);
-                    handler.Shutdown(SocketShutdown.Both);
-                    handler.Close();
-                });
             }
 
 
 
+        }
+
+        public async Task HandleConnection(Task<Socket> handlerTask)
+        {
+            var handler = await handlerTask;
+            Console.WriteLine("Connected ... ");
+            byte[] requestBytes = new Byte[1024];
+            string requestMessage = null;
+
+            while (true)
+            {
+
+                int requestLength = handler.Receive(requestBytes);
+
+                requestMessage += Encoding.ASCII.GetString(requestBytes, 0, requestLength);
+                Console.WriteLine($"\n {requestMessage} received. ");
+
+                break; // assuming message size is less than 1KB
+            }
+
+            byte[] message = Encoding.ASCII.GetBytes("Pong");
+            await handler.SendAsync(message, SocketFlags.None);
+            handler.Shutdown(SocketShutdown.Both);
+            handler.Close();
         }
 
         public void Shutdown()

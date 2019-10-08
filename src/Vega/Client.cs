@@ -18,7 +18,7 @@ namespace Vega
             _port = port;
         }
 
-        private async Task Connect()
+        public async Task Connect()
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             var address = IPAddress.Parse(_ip);
@@ -27,11 +27,11 @@ namespace Vega
         }
         public async Task<string> SendAsync(string message)
         {
-            await Connect();
+            //await Connect();
 
             if (socket.Connected == false)
             {
-                throw new Exception("Not connected!");
+                throw new Exception($"Not connected! - {message}");
 
             }
             ASCIIEncoding encoder = new ASCIIEncoding();
@@ -42,8 +42,10 @@ namespace Vega
             var response = new ArraySegment<byte>(new byte[1024], 0, 1024);
 
             await socket.ReceiveAsync(response, SocketFlags.None);
-
+            socket.Close();
             return encoder.GetString(response).Trim();
+
+            
         }
 
         public void Close()

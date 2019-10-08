@@ -22,17 +22,14 @@ namespace Vega.Tests
             });
 
             await Task.Delay(3000);
-
-
+            
             var client = new Vega.Client(ip, port);
-            //await client.Connect();
+            await client.Connect();
 
             var r1 = await client.SendAsync("Ping");
-
-            //await client.Connect();
-            var r2 = await client.SendAsync("Ping");
-
             Assert.StartsWith("Pong", r1);
+
+            var r2 = await client.SendAsync("Ping");            
             Assert.StartsWith("Pong", r2);
         }
 
@@ -53,7 +50,7 @@ namespace Vega.Tests
 
 
             var client = new Vega.Client(ip, port);
-            //await client.Connect();
+            await client.Connect();
 
             var response = await client.SendAsync("Ping");
             //server.Shutdown();
@@ -88,7 +85,7 @@ namespace Vega.Tests
             for (int i = 0; i < numberOfCalls; i++)
             {
                 //await client.Connect();
-                var task = client.SendAsync("Ping");
+                var task = client.SendAsync($"Ping{i}");
 
                 responseList.Add(task);
                 

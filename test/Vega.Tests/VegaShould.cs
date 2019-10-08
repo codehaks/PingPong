@@ -38,20 +38,20 @@ namespace Vega.Tests
         {
             var port = 3000;
             var ip = "127.100.100.50";
-            var server = new Vega.Server(ip, port);
+            //var server =  Vega.Server.StartListening(ip, port);
 
             Task.Run(() =>
            {
 
-               server.Start();
+               Vega.Server.StartListening(ip, port);
            });
 
             await Task.Delay(3000);
 
 
-            var client = new Vega.Client(ip, port);
+            Vega.Client.StartClient(ip, port);
 
-            client.StartClient();
+            Vega.Client.
 
             //await client.Connect();
             client.s

@@ -13,7 +13,7 @@ namespace MyApp.Client
         {
 
             var client = new Vega.Client("127.100.100.50", 3000);
-            await client.Connect();
+            //await client.Connect();
 
 
             for (int i = 0; i < 5; i++)

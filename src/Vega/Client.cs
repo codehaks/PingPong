@@ -18,7 +18,7 @@ namespace Vega
             _port = port;
         }
 
-        public async Task Connect()
+        private async Task Connect()
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             var address = IPAddress.Parse(_ip);
@@ -27,6 +27,8 @@ namespace Vega
         }
         public async Task<string> SendAsync(string message)
         {
+            await Connect();
+
             if (socket.Connected == false)
             {
                 throw new Exception("Not connected!");

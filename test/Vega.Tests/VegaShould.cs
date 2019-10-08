@@ -50,9 +50,13 @@ namespace Vega.Tests
 
 
             var client = new Vega.Client(ip, port);
-            await client.Connect();
 
-            var response = await client.SendAsync("Ping");
+            client.StartClient();
+
+            //await client.Connect();
+            client.s
+
+            var response = await client.Sen("Ping");
             //server.Shutdown();
             //client.Close();
 

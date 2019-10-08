@@ -116,7 +116,7 @@ namespace Vega
                     Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
                         content.Length, content);
                     // Echo the data back to the client.  
-                    Send(handler, content);
+                    Send(handler, "Pong");
                 }
                 else
                 {

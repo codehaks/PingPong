@@ -14,6 +14,9 @@ namespace MyApp.Client
 
             Vega.Client.Start("127.100.100.50", 3000);
             await Vega.Client.SendAsync("Ping");
+            await Vega.Client.SendAsync("Ping");
+            await Vega.Client.SendAsync("Ping");
+            Vega.Client.Close();
             
            
         }

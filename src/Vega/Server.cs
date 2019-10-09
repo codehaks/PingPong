@@ -10,8 +10,8 @@ namespace Vega
 {
     public partial class Server
     {
-        private static string _ip;
-        private static int _port;
+        private static  string _ip;
+        private static  int _port;
 
         private static Socket listener;
         public static ManualResetEvent allDone = new ManualResetEvent(false);

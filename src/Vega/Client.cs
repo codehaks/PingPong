@@ -38,21 +38,27 @@ namespace Vega
             clientSocket.BeginConnect(endpoint, new AsyncCallback(ConnectCallback), clientSocket);
             connectDone.WaitOne();
 
-            // Send test data to the remote device.  
-            Send(clientSocket, "This is a test<EOF>");
-            sendDone.WaitOne();
+            //// Send test data to the remote device.  
+            //Send(clientSocket, "This is a test<EOF>");
+            //sendDone.WaitOne();
 
-            // Receive the response from the remote device.  
-            Receive(clientSocket);
-            receiveDone.WaitOne();
+            //// Receive the response from the remote device.  
+            //Receive(clientSocket);
+            //receiveDone.WaitOne();
 
             // Write the response to the console.  
-            Console.WriteLine("Response received : {0}", response);
+            //Console.WriteLine("Response received : {0}", response);
 
-            // Release the socket.  
+            //// Release the socket.  
+            //clientSocket.Shutdown(SocketShutdown.Both);
+            //clientSocket.Close();
+           
+        }
+
+        public static void Close()
+        {
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
-           
         }
 
         private static void ConnectCallback(IAsyncResult ar)
@@ -165,7 +171,7 @@ namespace Vega
 
         public static async Task<string> SendAsync(string message)
         {
-            Send(clientSocket, message);
+            Send(clientSocket, message+"<EOF>");
             sendDone.WaitOne();
 
             // Receive the response from the remote device.  

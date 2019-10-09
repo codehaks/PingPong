@@ -8,11 +8,13 @@ namespace MyApp.Server
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
 
-            var server = new Vega.Server("127.100.100.50", 3000);
-            await server.Start();
+            Vega.Server.Start("127.100.100.50", 3000);
+
+            //Vega.Server(.Start("127.100.100.50", 3000);
+            //await server.Start();
            
         }
     }

@@ -24,7 +24,7 @@ namespace Vega.Tests
             await Task.Delay(3000);
             
             var client = new Vega.Client(ip, port);
-            await client.Connect();
+            await client.Start();
 
             var r1 = await client.SendAsync("Ping");
             Assert.StartsWith("Pong", r1);
@@ -50,7 +50,7 @@ namespace Vega.Tests
 
 
             var client = new Vega.Client(ip, port);
-            await client.Connect();
+            await client.Start();
 
             var response = await client.SendAsync("Ping");
             //server.Shutdown();

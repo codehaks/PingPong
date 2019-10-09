@@ -10,8 +10,8 @@ namespace Vega
 {
     public partial class Server
     {
-        private static  string _ip;
-        private static  int _port;
+        private static string _ip;
+        private static int _port;
 
         private static Socket listener;
         public static ManualResetEvent allDone = new ManualResetEvent(false);
@@ -79,8 +79,7 @@ namespace Vega
             if (bytesRead > 0)
             {
                 // There  might be more data, so store the data received so far.  
-                state.sb.Append(Encoding.ASCII.GetString(
-                    state.buffer, 0, bytesRead));
+                state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
 
                 // Check for end-of-file tag. If it is not there, read   
                 // more data.  
